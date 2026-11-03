@@ -58,6 +58,11 @@ flowchart TD
 
 During live testing in Discord `#incident-war-room`, SwitchGuard resolved a real P0 checkout outage in **2 minutes 51 seconds**:
 
+<p align="center">
+  <img src="docs/images/discord_war_room_proof.png" alt="SwitchGuard Autonomous Resolution in Discord" width="850" />
+</p>
+<p align="center"><em>Real autonomous debugging in Discord: Agent searches checkout.py, isolates ZeroDivisionError, verifies via pytest, and reports the patch.</em></p>
+
 | Metric | Traditional On-Call | SwitchGuard Autonomous Response | Improvement |
 |---|---|---|---|
 | **Mean Time to Acknowledge (MTTA)** | 12 - 25 minutes | **12 seconds** | **~100x Faster** |
