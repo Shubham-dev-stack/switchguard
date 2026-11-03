@@ -1,0 +1,48 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "switchguard"
+version = "1.0.0"
+description = "Autonomous SRE Incident Response Engine for Switch AI"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Apache-2.0" }
+authors = [
+    { name = "Shubham", email = "shubham@users.noreply.github.com" }
+]
+keywords = [
+    "switch",
+    "sre",
+    "incident-response",
+    "autonomous-agent",
+    "devops",
+    "ai-agent",
+    "discord-bot"
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: System :: Monitoring",
+    "Topic :: Software Development :: Bug Tracking"
+]
+dependencies = [
+    "pytest>=8.0.0",
+    "pytest-cov>=5.0.0"
+]
+
+[project.scripts]
+switchguard = "cli:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-v"
