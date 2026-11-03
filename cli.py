@@ -11,6 +11,9 @@ from core.timeline import StatusBoardRenderer
 from postmortem.generator import PostmortemGenerator
 from diagnostics.healthcheck import ServiceHealthProbe
 from diagnostics.log_analyzer import LogAnalyzer
+from metrics.exporter import PrometheusExporter
+from governance.vault import AuditVault
+from scripts.simulate_p0_outage import run_simulation
 
 def handle_triage(args):
     alert = Alert(
@@ -53,6 +56,27 @@ def handle_postmortem(args):
     print(md)
     return 0
 
+def handle_simulate(args):
+    return run_simulation()
+
+def handle_metrics(args):
+    exporter = PrometheusExporter()
+    exporter.record_incident(Severity.P0_CRITICAL)
+    exporter.record_suppressed(5)
+    exporter.record_patch_approved()
+    exporter.record_mttr(171.0)
+    print(exporter.render_prometheus_text())
+    return 0
+
+def handle_audit_verify(args):
+    vault = AuditVault()
+    vault.record_event("INC-CLI-1", "operator", "CHECK", "Integrity check invoked")
+    valid = vault.verify_integrity()
+    print(f"=== SwitchGuard Audit Vault ===")
+    print(f"Total Blocks:     {len(vault.chain)}")
+    print(f"Integrity Status: {'VALID (SHA-256 intact)' if valid else 'CORRUPTED'}")
+    return 0 if valid else 1
+
 def main():
     parser = argparse.ArgumentParser(description="SwitchGuard Autonomous SRE CLI")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -75,6 +99,18 @@ def main():
     p_post.add_argument("--incident-id", required=True, help="Incident tracking ID")
     p_post.add_argument("--service", default="checkout-service", help="Microservice name")
     p_post.set_defaults(func=handle_postmortem)
+
+    # simulate
+    p_sim = subparsers.add_parser("simulate", help="Run end-to-end incident war room simulation")
+    p_sim.set_defaults(func=handle_simulate)
+
+    # metrics
+    p_met = subparsers.add_parser("metrics", help="Export Prometheus SRE metrics")
+    p_met.set_defaults(func=handle_metrics)
+
+    # audit-verify
+    p_aud = subparsers.add_parser("audit-verify", help="Verify cryptographic integrity of audit vault")
+    p_aud.set_defaults(func=handle_audit_verify)
 
     args = parser.parse_args()
     return args.func(args)
