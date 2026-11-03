@@ -58,3 +58,15 @@ def test_cli_dashboard_args(monkeypatch):
     monkeypatch.setattr(sys, "argv", ["cli.py", "dashboard", "--no-browser", "--port", "9999"])
     ret = cli.main()
     assert ret == 0
+
+def test_demo_runner_sim(monkeypatch):
+    import demo
+    monkeypatch.setattr(sys, "argv", ["demo.py", "--sim"])
+    ret = demo.main()
+    assert ret == 0
+
+def test_demo_runner_chaos(monkeypatch):
+    import demo
+    monkeypatch.setattr(sys, "argv", ["demo.py", "--chaos"])
+    ret = demo.main()
+    assert ret == 0

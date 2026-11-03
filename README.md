@@ -4,7 +4,8 @@
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-brightgreen.svg)](https://www.python.org/)
 [![Flip the Switch Hackathon](https://img.shields.io/badge/Flip%20the%20Switch-Submission-orange.svg)](https://github.com/sandbox-quantum/switch)
-[![Tests: 52 Passed](https://img.shields.io/badge/Tests-52%20Passed%20(100%25)-success.svg)](tests/)
+[![Tests: 58 Passed](https://img.shields.io/badge/Tests-58%20Passed%20(100%25)-success.svg)](tests/)
+[![Awwwards-Grade CyberDeck](https://img.shields.io/badge/UI-3D%20CyberDeck%20Console-cyan.svg)](dashboard/)
 [![Prometheus](https://img.shields.io/badge/Metrics-Prometheus%20Ready-blueviolet.svg)](docs/METRICS.md)
 
 > **Flip the Switch Hackathon Submission**  
@@ -115,14 +116,19 @@ switchguard/
 ├── scripts/                       # Simulation & Verification Runners
 │   ├── simulate_p0_outage.py      # End-to-end P0 checkout outage dry run
 │   └── verify_cluster_health.py   # Cluster-wide synthetic probe
-├── tests/                         # Pytest Suite (52 Tests, 100% Pass)
+├── tests/                         # Pytest Suite (58 Tests, 100% Pass)
 │   └── fixtures/                  # Real-world telemetry JSON payloads
+├── dashboard/                     # 3D CyberDeck Command Web Deck
+│   ├── index.html                 # Three.js 3D space, CRT scanline, topology canvas
+│   ├── server.py                  # Embedded telemetry & simulation HTTP server
+│   └── static/                    # Cyberpunk stylesheets, shaders & audio synth
 ├── docs/                          # Comprehensive Documentation
 │   ├── ARCHITECTURE.md            # Deep system architecture & Switch integration
 │   ├── RUNBOOK.md                 # SRE on-call standard operating procedures
 │   ├── METRICS.md                 # Prometheus & Grafana dashboard guide
 │   ├── SECURITY.md                # Human-in-the-Loop safety & PII redaction policy
 │   └── postmortems/               # Incident reports (INC-502)
+├── demo.py                        # 1-Click Master Interactive Runner
 ├── cli.py                         # SwitchGuard Operator CLI
 ├── switchguard.template.yaml      # Switch Declarative Agent Template
 ├── DEMO_SCRIPT.md                 # 2-3 minute video recording guide
@@ -130,6 +136,38 @@ switchguard/
 ├── CONTRIBUTING.md                # Contributor guidelines & code standards
 └── README.md
 ```
+
+---
+
+## 🎮 1-Click Master Interactive Runner
+
+To experience SwitchGuard end-to-end with interactive menus, chaos testing, and web telemetry in one command:
+
+```bash
+python demo.py
+```
+
+Options:
+- `python demo.py --sim`: Runs full P0 outage triage, patch synthesis, and blameless postmortem.
+- `python demo.py --dashboard`: Launches the 3D CyberDeck Web Command Deck on `http://localhost:8080`.
+- `python demo.py --chaos`: Runs the complete chaos regression and self-healing test matrix.
+- `python demo.py --test`: Runs the 58-test unit verification suite.
+
+---
+
+## 🪐 3D CyberDeck SRE Command Deck
+
+SwitchGuard includes an **Awwwards / ThreeUI-grade interactive 3D SRE Cyber-Command Deck**:
+
+```bash
+python cli.py dashboard
+```
+
+- **Interactive 3D Constellation & Grid**: 120 FPS Three.js particle constellation with depth mouse parallax and CRT scanlines.
+- **Microservice Mesh Topology**: Interactive canvas rendering services (`checkout-service`, `payment-gateway`, `postgres-primary`, `redis-cache`) with animated laser data packets and P0 outage shockwave halos.
+- **Live Sound Effects**: Web Audio API synthesizer generating real-time sci-fi telemetry audio cues upon outage triggers and system resolution.
+- **War Room Terminal Streamer**: Real-time simulated terminal output logging agent triage, Git blame correlation, and human signoff in real-time.
+- **5-Whys Postmortem Modal**: Instant modal popup with complete incident analysis and preventive action items.
 
 ---
 
@@ -170,14 +208,16 @@ pytest tests/ -v
 
 ---
 
-## 🔗 Upstream Contributions to Switch
+## 🔗 Upstream Contributions to Switch (Core Portfolio)
 
-As part of the **#FliptheSwitch** initiative, we have contributed core service connectors upstream to `sandbox-quantum/switch`:
+As part of the **#FliptheSwitch** hackathon, we established a **3-PR upstream contribution portfolio** directly to [`sandbox-quantum/switch`](https://github.com/sandbox-quantum/switch):
 
-1. **Supabase Connector**: [PR #1343](https://github.com/sandbox-quantum/switch/pull/1343)  
+1. **Supabase Service Connector**: [PR #1343](https://github.com/sandbox-quantum/switch/pull/1343) (Resolves [#827](https://github.com/sandbox-quantum/switch/issues/827))  
    *Adds Supabase database & auth management capabilities to Switch agents.*
-2. **Sentry Connector**: [PR #1348](https://github.com/sandbox-quantum/switch/pull/1348)  
+2. **Sentry Service Connector**: [PR #1348](https://github.com/sandbox-quantum/switch/pull/1348) (Resolves [#820](https://github.com/sandbox-quantum/switch/issues/820))  
    *Enables real-time error telemetry ingestion and stack trace analysis directly in Switch rooms.*
+3. **Stripe Service Connector**: [PR #1367](https://github.com/sandbox-quantum/switch/pull/1367) (Resolves [#829](https://github.com/sandbox-quantum/switch/issues/829))  
+   *Connects Stripe's remote MCP server (`https://mcp.stripe.com`) with OAuth, dynamic client registration, and safe read/write payment tools.*
 
 ---
 
