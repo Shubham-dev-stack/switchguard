@@ -42,6 +42,10 @@ dependencies = [
 [project.scripts]
 switchguard = "cli:main"
 
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["core*", "chaos*", "metrics*", "adapters*", "notifier*", "ingestion*", "scenarios*", "governance*", "postmortem*", "diagnostics*"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
