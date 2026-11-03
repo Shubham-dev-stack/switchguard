@@ -77,6 +77,11 @@ def handle_audit_verify(args):
     print(f"Integrity Status: {'VALID (SHA-256 intact)' if valid else 'CORRUPTED'}")
     return 0 if valid else 1
 
+def handle_dashboard(args):
+    from dashboard.server import start_server
+    start_server(port=args.port, open_browser=not args.no_browser)
+    return 0
+
 def main():
     parser = argparse.ArgumentParser(description="SwitchGuard Autonomous SRE CLI")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -111,6 +116,12 @@ def main():
     # audit-verify
     p_aud = subparsers.add_parser("audit-verify", help="Verify cryptographic integrity of audit vault")
     p_aud.set_defaults(func=handle_audit_verify)
+
+    # dashboard
+    p_dash = subparsers.add_parser("dashboard", help="Launch interactive 3D SRE CyberDeck web console")
+    p_dash.add_argument("--port", type=int, default=8080, help="Port to bind dashboard server (default: 8080)")
+    p_dash.add_argument("--no-browser", action="store_true", help="Do not open browser automatically")
+    p_dash.set_defaults(func=handle_dashboard)
 
     args = parser.parse_args()
     return args.func(args)

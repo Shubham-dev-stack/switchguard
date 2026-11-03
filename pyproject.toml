@@ -45,7 +45,7 @@ switchguard = "cli:main"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["core*", "chaos*", "metrics*", "adapters*", "notifier*", "ingestion*", "scenarios*", "governance*", "postmortem*", "diagnostics*"]
+include = ["core*", "chaos*", "metrics*", "adapters*", "notifier*", "ingestion*", "scenarios*", "governance*", "postmortem*", "diagnostics*", "dashboard*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
