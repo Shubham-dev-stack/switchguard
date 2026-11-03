@@ -1,9 +1,14 @@
 import os
+import sys
 import json
 import http.server
 import socketserver
 import webbrowser
 from typing import Dict, Any
+
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 
 DASHBOARD_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -14,6 +19,12 @@ class CyberDeckHandler(http.server.SimpleHTTPRequestHandler):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=DASHBOARD_DIR, **kwargs)
+
+    def end_headers(self):
+        self.send_header("Cache-Control", "no-cache, no-store, must-revalidate")
+        self.send_header("Pragma", "no-cache")
+        self.send_header("Expires", "0")
+        super().end_headers()
 
     def do_GET(self):
         if self.path == "/api/status":
@@ -51,10 +62,11 @@ class CyberDeckHandler(http.server.SimpleHTTPRequestHandler):
             super().do_GET()
 
 def start_server(port: int = 8080, open_browser: bool = True):
-    with socketserver.TCPServer(("", port), CyberDeckHandler) as httpd:
+    server_class = getattr(http.server, "ThreadingHTTPServer", socketserver.TCPServer)
+    with server_class(("", port), CyberDeckHandler) as httpd:
         url = f"http://localhost:{port}"
         print(f"============================================================")
-        print(f"🛡️ SwitchGuard CyberDeck Dashboard Live at {url}")
+        print(f"[+] SwitchGuard CyberDeck Dashboard Live at {url}")
         print(f"============================================================")
         if open_browser:
             webbrowser.open(url)
