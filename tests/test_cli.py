@@ -51,3 +51,10 @@ def test_cli_audit_verify(capsys, monkeypatch):
     assert ret == 0
     captured = capsys.readouterr()
     assert "VALID (SHA-256 intact)" in captured.out
+
+def test_cli_dashboard_args(monkeypatch):
+    import cli
+    monkeypatch.setattr("dashboard.server.start_server", lambda port, open_browser: None)
+    monkeypatch.setattr(sys, "argv", ["cli.py", "dashboard", "--no-browser", "--port", "9999"])
+    ret = cli.main()
+    assert ret == 0
