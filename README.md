@@ -4,7 +4,8 @@
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-brightgreen.svg)](https://www.python.org/)
 [![Flip the Switch Hackathon](https://img.shields.io/badge/Flip%20the%20Switch-Submission-orange.svg)](https://github.com/sandbox-quantum/switch)
-[![Tests: 23 Passed](https://img.shields.io/badge/Tests-23%20Passed%20(100%25)-success.svg)](tests/)
+[![Tests: 52 Passed](https://img.shields.io/badge/Tests-52%20Passed%20(100%25)-success.svg)](tests/)
+[![Prometheus](https://img.shields.io/badge/Metrics-Prometheus%20Ready-blueviolet.svg)](docs/METRICS.md)
 
 > **Flip the Switch Hackathon Submission**  
 > *Powered by [Switch](https://github.com/sandbox-quantum/switch) (SandboxAQ / Alphabet), WeMakeDevs & DevTools Academy.*
@@ -77,7 +78,23 @@ switchguard/
 │   ├── models.py                  # Severity, Incident, BlastRadius, Timeline
 │   ├── classifier.py              # Tier-1/2 triage & financial risk estimator
 │   ├── sla.py                     # SRE MTTA/MTTR deadline tracker
-│   └── timeline.py                # Markdown status board renderer
+│   ├── timeline.py                # Markdown status board renderer
+│   └── orchestrator.py            # Central incident coordination engine
+├── ingestion/                     # Multi-Vendor Telemetry Ingestion
+│   ├── parsers.py                 # Sentry, Datadog, Prometheus parsers
+│   └── deduplicator.py            # Sliding-window alert storm suppressor
+├── adapters/                      # Chat Platform Adapters
+│   ├── base.py                    # Base interface
+│   ├── discord_adapter.py         # Discord Embeds & Action Row buttons
+│   └── slack_adapter.py           # Slack Block Kit interactive messages
+├── governance/                    # Compliance & Safety
+│   ├── approval_gate.py           # Human-in-the-Loop policy gate
+│   └── vault.py                   # SHA-256 tamper-evident cryptographic audit ledger
+├── metrics/                       # Observability & Monitoring
+│   └── exporter.py                # Prometheus text format metrics exporter
+├── chaos/                         # Chaos Engineering & Resilience
+│   ├── injector.py                # Synthetic latency & fault injector
+│   └── fuzzer.py                  # Boundary fuzzer for promo math edge cases
 ├── diagnostics/                   # Autonomous Forensic Suite
 │   ├── log_analyzer.py            # PII scrubber & stack trace parser
 │   ├── healthcheck.py             # Synthetic service probe & latency benchmark
@@ -88,15 +105,24 @@ switchguard/
 │   └── redis_cache_stampede.py    # Cache thundering herd mitigation
 ├── postmortem/                    # Audit & Compliance Engine
 │   └── generator.py               # 5-Whys blameless postmortem generator
-├── demo-service/                  # Production Checkout Microservice
-│   ├── checkout.py                # Order calculation engine
-│   └── test_checkout.py           # Unit & edge-case test suite
-├── tests/                         # Pytest Suite (23 Tests, 100% Pass)
-├── docs/postmortems/              # Generated Incident Postmortems
+├── notifier/                      # Resilient Webhook Delivery
+│   └── dispatcher.py              # Exponential backoff webhook dispatcher
+├── scripts/                       # Simulation & Verification Runners
+│   ├── simulate_p0_outage.py      # End-to-end P0 checkout outage dry run
+│   └── verify_cluster_health.py   # Cluster-wide synthetic probe
+├── tests/                         # Pytest Suite (52 Tests, 100% Pass)
+│   └── fixtures/                  # Real-world telemetry JSON payloads
+├── docs/                          # Comprehensive Documentation
+│   ├── ARCHITECTURE.md            # Deep system architecture & Switch integration
+│   ├── RUNBOOK.md                 # SRE on-call standard operating procedures
+│   ├── METRICS.md                 # Prometheus & Grafana dashboard guide
+│   ├── SECURITY.md                # Human-in-the-Loop safety & PII redaction policy
+│   └── postmortems/               # Incident reports (INC-502)
 ├── cli.py                         # SwitchGuard Operator CLI
 ├── switchguard.template.yaml      # Switch Declarative Agent Template
 ├── DEMO_SCRIPT.md                 # 2-3 minute video recording guide
 ├── pyproject.toml                 # Modern Python packaging specification
+├── CONTRIBUTING.md                # Contributor guidelines & code standards
 └── README.md
 ```
 
