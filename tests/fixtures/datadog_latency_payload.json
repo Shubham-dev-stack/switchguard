@@ -1,0 +1,8 @@
+{
+  "id": 8839201,
+  "event_title": "[Triggered] Checkout API Latency P99 > 2500ms",
+  "body": "Checkout gateway response time breached 2.5s threshold across 150 requests per second.",
+  "tags": "env:production,service:checkout-service,tier:1",
+  "priority": "high",
+  "snapshot_url": "https://app.datadoghq.com/monitors/8839201"
+}

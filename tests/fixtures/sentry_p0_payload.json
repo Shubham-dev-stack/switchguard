@@ -1,0 +1,44 @@
+{
+  "id": "1002491",
+  "url": "https://sentry.io/organizations/switch-lab/issues/1002491/",
+  "data": {
+    "issue": {
+      "id": "1002491",
+      "project": {
+        "id": "410",
+        "name": "checkout-service",
+        "slug": "checkout-service"
+      },
+      "metadata": {
+        "type": "ZeroDivisionError",
+        "value": "float division by zero"
+      }
+    },
+    "event": {
+      "event_id": "f47ac10b58cc4372a5670e02b2c3d479",
+      "title": "ZeroDivisionError: float division by zero",
+      "entries": [
+        {
+          "type": "exception",
+          "data": {
+            "values": [
+              {
+                "type": "ZeroDivisionError",
+                "value": "float division by zero",
+                "stacktrace": {
+                  "frames": [
+                    {
+                      "filename": "demo-service/checkout.py",
+                      "lineno": 24,
+                      "function": "calculate_order_total"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
