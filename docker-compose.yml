@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: switchguard-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+
+  switchguard:
+    build: .
+    container_name: switchguard-engine
+    ports:
+      - "8080:8080"
+    environment:
+      - ENV=production
+      - MTTA_LIMIT_MINS=5
+      - MTTR_LIMIT_MINS=30
+    depends_on:
+      - prometheus
