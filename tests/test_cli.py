@@ -27,3 +27,27 @@ def test_cli_postmortem(capsys, monkeypatch):
     assert ret == 0
     captured = capsys.readouterr()
     assert "# 📑 Postmortem: [P0] Autonomous Incident Remediation for checkout-service" in captured.out
+
+def test_cli_simulate(capsys, monkeypatch):
+    test_args = ["cli.py", "simulate"]
+    monkeypatch.setattr(sys, "argv", test_args)
+    ret = main()
+    assert ret == 0
+    captured = capsys.readouterr()
+    assert "SwitchGuard Autonomous Incident Simulation" in captured.out
+
+def test_cli_metrics(capsys, monkeypatch):
+    test_args = ["cli.py", "metrics"]
+    monkeypatch.setattr(sys, "argv", test_args)
+    ret = main()
+    assert ret == 0
+    captured = capsys.readouterr()
+    assert "switchguard_incidents_total" in captured.out
+
+def test_cli_audit_verify(capsys, monkeypatch):
+    test_args = ["cli.py", "audit-verify"]
+    monkeypatch.setattr(sys, "argv", test_args)
+    ret = main()
+    assert ret == 0
+    captured = capsys.readouterr()
+    assert "VALID (SHA-256 intact)" in captured.out
