@@ -7,283 +7,433 @@
   <link rel="stylesheet" href="static/css/cyberdeck.css" />
 </head>
 <body>
-  <!-- Ambient Radial Light Mesh -->
-  <div class="ambient-mesh"></div>
+  <div class="ambient-bg"></div>
   <canvas id="space-canvas" style="display:none;"></canvas>
   <canvas id="topology-canvas" style="display:none;"></canvas>
-  <div class="scanline-overlay"></div>
 
-  <!-- Main CyberDeck Container -->
-  <div class="deck-container">
+  <!-- 1. Left Sidebar Navigation -->
+  <aside class="app-sidebar">
+    <div class="sidebar-brand">
+      <div class="sidebar-logo">🛡️</div>
+      <div class="sidebar-titles">
+        <h2>SwitchGuard</h2>
+        <div class="subtitle">CyberDeck</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a class="nav-item active" onclick="if(window.playAudioTone) window.playAudioTone(750, 'sine', 0.05, 0.04);">
+        <span class="icon">📊</span>
+        <span>Dashboard</span>
+      </a>
+      <a class="nav-item" onclick="window.switchTab('discord');">
+        <span class="icon">💬</span>
+        <span>War Room (Discord)</span>
+      </a>
+      <a class="nav-item" onclick="window.switchTab('activity');">
+        <span class="icon">📋</span>
+        <span>Live Activity Feed</span>
+      </a>
+      <a class="nav-item" onclick="window.switchTab('sentry');">
+        <span class="icon">🔍</span>
+        <span>Sentry Diagnostics</span>
+      </a>
+      <a class="nav-item" onclick="window.switchTab('diff');">
+        <span class="icon">🛠️</span>
+        <span>Synthesized Patches</span>
+      </a>
+      <a class="nav-item" onclick="document.getElementById('postmortem-modal').classList.add('active');">
+        <span class="icon">📑</span>
+        <span>Postmortems</span>
+      </a>
+      <a class="nav-item" onclick="if(window.playAudioTone) window.playAudioTone(600, 'sine', 0.05, 0.04);">
+        <span class="icon">⚙️</span>
+        <span>Settings</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer-card">
+      <div class="shield-icon">🛡️</div>
+      <div>
+        <h4>System Healthy</h4>
+        <p>All swarms operational</p>
+      </div>
+    </div>
+
+    <div class="sidebar-version">
+      <span>v3.0.0</span>
+      <span class="status-dot">Online</span>
+    </div>
+  </aside>
+
+  <!-- 2. Main Content Viewport -->
+  <main class="app-main">
     
-    <!-- Top Command Header -->
-    <header class="deck-header">
-      <div class="brand-section">
-        <div class="brand-badge">🛡️</div>
-        <div class="brand-titles">
-          <h1>
-            <span>SwitchGuard CyberDeck</span>
-            <span class="version-tag">v2.4-PROD</span>
-          </h1>
-          <div class="subtitle">
-            <span>Autonomous SRE Swarm & Telemetry Engine</span>
-            <span>•</span>
-            <span style="color: var(--cyan-primary);">Powered by Switch AI</span>
-          </div>
-        </div>
+    <!-- Top Header -->
+    <header class="top-header">
+      <div class="welcome-info">
+        <h1>
+          <span>Welcome back, Shubham!</span>
+          <span>👋</span>
+        </h1>
+        <div class="sub-desc">Autonomous SRE Swarm & Cyber-Command Deck • Powered by Switch AI</div>
       </div>
 
-      <div class="header-controls">
-        <div class="status-pill resolved-clean" id="status-pill">
-          <span class="pulse-dot"></span>
-          <span id="status-pill-text">🟢 ALL SYSTEMS OPERATIONAL</span>
+      <div class="header-badges-and-actions">
+        <div class="system-status-pill" id="status-pill">
+          <span class="status-beacon"></span>
+          <span id="status-pill-text">All Systems Online</span>
         </div>
 
-        <button class="audio-btn" id="audio-toggle-btn" onclick="window.toggleAudioMute()" title="Toggle Sci-Fi SFX">
-          <div class="audio-eq-bars">
-            <span></span><span></span><span></span><span></span>
-          </div>
-          <span>AUDIO SFX</span>
+        <div class="header-stat-tag">
+          <span>Uptime <strong>99.98%</strong></span>
+        </div>
+
+        <div class="header-time-pill">
+          <span class="live-indicator"></span>
+          <span id="live-clock">12:24:37 AM</span>
+        </div>
+
+        <button class="action-btn secondary" id="audio-toggle-btn" onclick="window.toggleAudioMute()" title="Toggle SFX">
+          <span>🔊</span>
         </button>
 
-        <button class="btn-secondary" id="view-postmortem-btn" onclick="document.getElementById('postmortem-modal').classList.add('active'); if(window.playAudioTone) window.playAudioTone(600, 'sine', 0.08, 0.05);">
+        <button class="action-btn secondary" id="view-postmortem-btn" onclick="document.getElementById('postmortem-modal').classList.add('active'); if(window.playAudioTone) window.playAudioTone(600, 'sine', 0.08, 0.05);">
           <span>📑 Postmortem</span>
         </button>
 
-        <button class="btn-danger" id="trigger-chaos-btn" onclick="window.runInteractiveSimulation()">
+        <button class="action-btn danger" id="trigger-chaos-btn" onclick="window.runInteractiveSimulation()">
           <span>⚡ Trigger Chaos Outage</span>
         </button>
+
+        <div class="user-profile-chip" title="Operator @Shubham">S</div>
       </div>
     </header>
 
-    <!-- KPI Telemetry Ribbon with Live Sparklines -->
-    <section class="kpi-grid">
-      <div class="kpi-card" style="--card-accent: var(--cyan-primary);">
-        <div class="kpi-header">
-          <span class="kpi-title">Mean Time to Acknowledge</span>
-          <span class="kpi-tag">MTTA</span>
+    <!-- 3. Vibrant Glowing KPI Cards (Blue, Purple, Green, Amber) -->
+    <section class="kpi-row">
+      <!-- Card 1: Blue (MTTA) -->
+      <div class="kpi-box card-blue">
+        <div class="kpi-top">
+          <div class="kpi-icon-title">
+            <div class="kpi-icon-badge">⏱️</div>
+            <span class="kpi-name">Mean Time to Acknowledge</span>
+          </div>
+          <span class="kpi-trend-pill">↓ 34%</span>
         </div>
-        <div class="kpi-value" id="metric-mtta">12s</div>
-        <div class="kpi-subtext">Industry Target: &lt; 5m • ~100x Faster</div>
-        <canvas class="sparkline-canvas" id="mtta-sparkline" width="300" height="48"></canvas>
+        <div class="kpi-main-val" id="metric-mtta">12s</div>
+        <div class="kpi-caption">⚡ Lightning-fast autonomous detection</div>
+        <canvas class="kpi-sparkline" id="mtta-sparkline" width="300" height="48"></canvas>
       </div>
 
-      <div class="kpi-card" style="--card-accent: var(--green-emerald);">
-        <div class="kpi-header">
-          <span class="kpi-title">Mean Time to Resolution</span>
-          <span class="kpi-tag">MTTR</span>
+      <!-- Card 2: Purple (MTTR) -->
+      <div class="kpi-box card-purple">
+        <div class="kpi-top">
+          <div class="kpi-icon-title">
+            <div class="kpi-icon-badge">⚡</div>
+            <span class="kpi-name">Mean Time to Resolution</span>
+          </div>
+          <span class="kpi-trend-pill">↓ 42%</span>
         </div>
-        <div class="kpi-value" id="metric-mttr">2m 51s</div>
-        <div class="kpi-subtext">Industry Target: &lt; 30m • ~40x Faster</div>
-        <canvas class="sparkline-canvas" id="mttr-sparkline" width="300" height="48"></canvas>
+        <div class="kpi-main-val" id="metric-mttr">2m 51s</div>
+        <div class="kpi-caption">🟣 Rapid self-healing & verification</div>
+        <canvas class="kpi-sparkline" id="mttr-sparkline" width="300" height="48"></canvas>
       </div>
 
-      <div class="kpi-card" style="--card-accent: var(--red-plasma);">
-        <div class="kpi-header">
-          <span class="kpi-title">Active Error Rate</span>
-          <span class="kpi-tag">GATEWAY</span>
+      <!-- Card 3: Green (Error Rate) -->
+      <div class="kpi-box card-green">
+        <div class="kpi-top">
+          <div class="kpi-icon-title">
+            <div class="kpi-icon-badge">🛡️</div>
+            <span class="kpi-name">Active Error Rate</span>
+          </div>
+          <span class="kpi-trend-pill">↓ 100%</span>
         </div>
-        <div class="kpi-value" id="metric-error-rate" style="color: var(--green-emerald);">0.0%</div>
-        <div class="kpi-subtext">Checkout API Real-time Health</div>
-        <canvas class="sparkline-canvas" id="error-rate-sparkline" width="300" height="48"></canvas>
+        <div class="kpi-main-val" id="metric-error-rate" style="color: var(--green);">0.0%</div>
+        <div class="kpi-caption">🟢 Zero active errors on Checkout API</div>
+        <canvas class="kpi-sparkline" id="error-rate-sparkline" width="300" height="48"></canvas>
       </div>
 
-      <div class="kpi-card" style="--card-accent: var(--amber-warning);">
-        <div class="kpi-header">
-          <span class="kpi-title">Financial Blast Radius</span>
-          <span class="kpi-tag">RISK</span>
+      <!-- Card 4: Amber (Financial Risk) -->
+      <div class="kpi-box card-amber">
+        <div class="kpi-top">
+          <div class="kpi-icon-title">
+            <div class="kpi-icon-badge">💰</div>
+            <span class="kpi-name">Financial Blast Radius</span>
+          </div>
+          <span class="kpi-trend-pill">↓ 100%</span>
         </div>
-        <div class="kpi-value" id="metric-financial-risk">$0.00 USD</div>
-        <div class="kpi-subtext">Projected Revenue Exposure</div>
-        <canvas class="sparkline-canvas" id="financial-risk-sparkline" width="300" height="48"></canvas>
+        <div class="kpi-main-val" id="metric-financial-risk">$0.00 USD</div>
+        <div class="kpi-caption">🟡 No financial revenue exposure</div>
+        <canvas class="kpi-sparkline" id="financial-risk-sparkline" width="300" height="48"></canvas>
       </div>
     </section>
 
-    <!-- Main Dashboard Split: 3D Holographic Topology + Multi-Tab SRE Console -->
-    <div class="dashboard-split">
+    <!-- 4. Middle Center Split: 3D Topology Mesh + Multi-Tab Live War Room -->
+    <div class="center-split">
       
-      <!-- Left Column: 3D WebGL Microservice Mesh -->
-      <div class="panel-card">
-        <div class="panel-header">
-          <div class="panel-title">
-            <span>🪐</span>
-            <span>3D Microservice Mesh & Live Data Stream</span>
+      <!-- Left: 3D Microservice Mesh -->
+      <div class="topo-card">
+        <div class="topo-header">
+          <div class="topo-title-group">
+            <span>🌐</span>
+            <h3>Microservice Topology & Live Data Stream</h3>
+            <span class="live-badge-green">● Real-Time</span>
           </div>
-          <span class="panel-badge">Interactive Three.js WebGL</span>
+          <div class="topo-controls">
+            <button class="topo-btn active">Topology</button>
+            <button class="topo-btn" onclick="window.reset3DNodes()">Reset View</button>
+          </div>
         </div>
 
-        <div class="three-cluster-wrapper">
+        <div class="three-viewport">
           <div id="three-cluster-container"></div>
-          <div class="three-hint-hud">
-            <span>🖱️ Drag to rotate 3D cluster • Scroll to zoom</span>
+          <div class="viewport-hud">
+            <span>🖱️ Click & Drag to Rotate 360° • Scroll to Zoom</span>
           </div>
         </div>
 
-        <div class="panel-footer-metrics">
-          <div class="metric-mini-box">
-            <h5>P99 Latency SLA</h5>
-            <div class="val">18.4 ms <span style="font-size: 11px; color: var(--green-emerald); font-weight: normal;">• OPTIMAL</span></div>
+        <div class="topo-footer">
+          <div class="p99-stat">
+            <span class="label">P99 Latency</span>
+            <span class="num">18.4 ms</span>
+            <span class="drop">↓ 27.3%</span>
           </div>
-          <div class="metric-mini-box">
-            <h5>Autonomous SRE Squad</h5>
-            <div class="val" style="font-size: 13px; color: #fff;">
-              🛡️ Commander • 🔍 Investigator • 🛠️ Fixer
-            </div>
+
+          <div class="squad-chips">
+            <span class="title">Autonomous SRE Swarm:</span>
+            <span class="squad-chip">🛡️ Commander</span>
+            <span class="squad-chip">🔍 Investigator</span>
+            <span class="squad-chip">🛠️ Fixer</span>
           </div>
         </div>
       </div>
 
-      <!-- Right Column: Multi-Tab SRE Command Console -->
-      <div class="console-panel">
-        <div class="console-tabs">
-          <button class="tab-btn active" data-tab="discord">
+      <!-- Right: Multi-Tab SRE Console / Feed -->
+      <div class="feed-card">
+        <div class="feed-tab-header">
+          <button class="tab-pill-btn active" data-tab="discord" onclick="window.switchTab('discord')">
             <span>💬</span>
-            <span>Discord War Room</span>
+            <span>War Room (Discord)</span>
           </button>
-          <button class="tab-btn" data-tab="sentry">
-            <span>🔍</span>
-            <span>Sentry Trace</span>
+          <button class="tab-pill-btn" data-tab="activity" onclick="window.switchTab('activity')">
+            <span>📋</span>
+            <span>Live Activity Log</span>
           </button>
-          <button class="tab-btn" data-tab="diff">
+          <button class="tab-pill-btn" data-tab="diff" onclick="window.switchTab('diff')">
             <span>🛠️</span>
             <span>Hotfix Diff</span>
           </button>
-          <button class="tab-btn" data-tab="ledger">
-            <span>⛓️</span>
-            <span>Audit Ledger</span>
+          <button class="tab-pill-btn" data-tab="sentry" onclick="window.switchTab('sentry')">
+            <span>🔍</span>
+            <span>Sentry Trace</span>
           </button>
         </div>
 
-        <!-- Tab 1: Discord War Room Stream -->
-        <div class="tab-content active" id="tab-discord">
-          <div class="discord-feed" id="discord-message-stream">
-            <div class="discord-msg-row">
-              <div class="discord-avatar">🛡️</div>
-              <div class="discord-content">
-                <div class="discord-header">
-                  <span class="discord-author">SwitchGuard Commander</span>
-                  <span class="discord-tag">BOT</span>
-                  <span class="discord-timestamp">Today at 18:20</span>
-                </div>
-                <div class="discord-body">
-                  War room connected to cluster telemetry bus. Monitoring 4 services on <code>us-east-1</code>. All synthetic probes healthy. Click <strong>Trigger Chaos Outage</strong> above to simulate production self-healing.
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Tab 2: Sentry Forensic Trace -->
-        <div class="tab-content" id="tab-sentry">
-          <div class="sentry-panel">
-            <div class="sentry-header-box">
-              <span class="sentry-error-pill">CRITICAL EXCEPTION</span>
-              <div class="sentry-error-title">ZeroDivisionError: float division by zero</div>
-              <div class="sentry-tags">
-                <span class="sentry-tag-item">service: checkout-service</span>
-                <span class="sentry-tag-item">env: production</span>
-                <span class="sentry-tag-item">release: v2.4.1</span>
-                <span class="sentry-tag-item">culprit: calculate_order_total</span>
-              </div>
-            </div>
-
-            <div class="sentry-code-frame">
-              <div class="frame-filename">
-                <span>demo-service/checkout.py in calculate_order_total</span>
-                <span>Line 24</span>
-              </div>
-              <div class="code-lines">
-                <div class="code-line">
-                  <span class="line-num">22</span>
-                  <span>discount_amount = round(subtotal * (discount_pct / 100.0), 2)</span>
-                </div>
-                <div class="code-line">
-                  <span class="line-num">23</span>
-                  <span>net_total = round(subtotal - discount_amount, 2)</span>
-                </div>
-                <div class="code-line fault-line">
-                  <span class="line-num">24</span>
-                  <span>savings_ratio = round(subtotal / net_total, 2)  # &lt;--- Crash when net_total == 0.0</span>
-                </div>
-                <div class="code-line">
-                  <span class="line-num">25</span>
-                  <span>return {"subtotal": subtotal, "savings_ratio": savings_ratio}</span>
+        <div class="tab-viewport">
+          <!-- Tab 1: Discord War Room -->
+          <div class="tab-content active" id="tab-discord">
+            <div class="discord-inner-feed" id="discord-message-stream">
+              <div class="discord-msg-row">
+                <div class="discord-avatar">🛡️</div>
+                <div class="discord-content">
+                  <div class="discord-header">
+                    <span class="discord-author">SwitchGuard Commander</span>
+                    <span class="discord-tag">BOT</span>
+                    <span class="discord-timestamp">Today at 18:20</span>
+                  </div>
+                  <div class="discord-body">
+                    Autonomous SRE incident bridge connected. Telemetry subscribers active for <code>checkout-service</code>, <code>payment-gateway</code>, <code>postgres-primary</code>, and <code>redis-cache</code>. Click <strong>Trigger Chaos Outage</strong> above to test autonomous self-healing.
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- Tab 3: Synthesized Git Diff -->
-        <div class="tab-content" id="tab-diff">
-          <div class="diff-panel">
-            <div class="diff-header-box">
-              <div style="font-size: 13px; color: #fff; font-weight: 700;">Proposed Remediation Patch</div>
-              <div style="font-size: 11px; color: var(--green-emerald);">3/3 Pytest Verification Green</div>
-            </div>
-            <div class="diff-code-wrapper">
-              <div class="diff-file-title">demo-service/checkout.py</div>
-              <div class="diff-row"><span class="line-num" style="width: 25px;">23</span>&nbsp; net_total = round(subtotal - discount_amount, 2)</div>
-              <div class="diff-row diff-del"><span class="line-num" style="width: 25px;">24</span>- savings_ratio = round(subtotal / net_total, 2)</div>
-              <div class="diff-row diff-add"><span class="line-num" style="width: 25px;">24</span>+ if net_total == 0.0:</div>
-              <div class="diff-row diff-add"><span class="line-num" style="width: 25px;">25</span>+ &nbsp; &nbsp; savings_ratio = 1.0 &nbsp;# 100% discount means full savings</div>
-              <div class="diff-row diff-add"><span class="line-num" style="width: 25px;">26</span>+ else:</div>
-              <div class="diff-row diff-add"><span class="line-num" style="width: 25px;">27</span>+ &nbsp; &nbsp; savings_ratio = round(subtotal / net_total, 2)</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Tab 4: Cryptographic Audit Ledger -->
-        <div class="tab-content" id="tab-ledger">
-          <div class="ledger-panel">
-            <div style="margin-bottom: 16px; font-size: 12px; color: var(--text-sub);">
-              SHA-256 Tamper-Proof Incident Block Chain:
-            </div>
-            <div class="ledger-chain">
-              <div class="ledger-block">
-                <div class="block-dot">✔</div>
-                <div class="block-details">
-                  <div class="block-title">Block #0: Genesis Anchor</div>
-                  <div class="block-hash">Hash: 0000000000000000000000000000000000000000000000000000000000000000</div>
-                </div>
+          <!-- Tab 2: Live Activity Log (Reference Style) -->
+          <div class="tab-content" id="tab-activity">
+            <div class="timeline-activity-list">
+              <div class="timeline-row">
+                <span class="timeline-time">12:24:32</span>
+                <span class="timeline-tag tag-threat">THREAT</span>
+                <span class="timeline-msg">Simulated probe detected on /api/admin</span>
               </div>
-              <div class="ledger-block">
-                <div class="block-dot">✔</div>
-                <div class="block-details">
-                  <div class="block-title">Block #1: ALERT_INGESTED (Sentry ZeroDivisionError)</div>
-                  <div class="block-hash">Hash: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855</div>
-                </div>
+              <div class="timeline-row">
+                <span class="timeline-time">12:24:30</span>
+                <span class="timeline-tag tag-info">INFO</span>
+                <span class="timeline-msg">Gateway connection from 192.168.1.24 (Trusted)</span>
               </div>
-              <div class="ledger-block">
-                <div class="block-dot">✔</div>
-                <div class="block-details">
-                  <div class="block-title">Block #2: PATCH_SYNTHESIZED (checkout.py guard clause)</div>
-                  <div class="block-hash">Hash: 872983ac298f01b3847291a204859cba29485710293847561928347581928374</div>
-                </div>
+              <div class="timeline-row">
+                <span class="timeline-time">12:24:28</span>
+                <span class="timeline-tag tag-success">SUCCESS</span>
+                <span class="timeline-msg">Checkout order processed successfully (200 OK)</span>
               </div>
-              <div class="ledger-block">
-                <div class="block-dot">✔</div>
-                <div class="block-details">
-                  <div class="block-title">Block #3: HUMAN_APPROVAL_GRANTED (Operator @Shubham)</div>
-                  <div class="block-hash">Hash: 9283740192834756192834756192834756192834756192834756192834756192</div>
-                </div>
+              <div class="timeline-row">
+                <span class="timeline-time">12:24:25</span>
+                <span class="timeline-tag tag-warn">WARN</span>
+                <span class="timeline-msg">CPU load spike: 82% on checkout-service</span>
               </div>
-              <div class="ledger-block">
-                <div class="block-dot">✔</div>
-                <div class="block-details">
-                  <div class="block-title">Block #4: INCIDENT_RESOLVED (Postmortem Sealed)</div>
-                  <div class="block-hash">Hash: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945</div>
-                </div>
+              <div class="timeline-row">
+                <span class="timeline-time">12:24:22</span>
+                <span class="timeline-tag tag-info">INFO</span>
+                <span class="timeline-msg">Redis cache hit rate steady at 99.2%</span>
+              </div>
+              <div class="timeline-row">
+                <span class="timeline-time">12:24:19</span>
+                <span class="timeline-tag tag-success">SUCCESS</span>
+                <span class="timeline-msg">PostgreSQL connection pool healthy (12/100 active)</span>
+              </div>
+              <div class="timeline-row">
+                <span class="timeline-time">12:24:16</span>
+                <span class="timeline-tag tag-info">INFO</span>
+                <span class="timeline-msg">Synthetic SRE probe completed (18.4ms latency)</span>
+              </div>
+              <div class="timeline-row">
+                <span class="timeline-time">12:24:13</span>
+                <span class="timeline-tag tag-success">SUCCESS</span>
+                <span class="timeline-msg">Security scan completed (Clean: 0 vulnerabilities)</span>
               </div>
             </div>
           </div>
-        </div>
 
+          <!-- Tab 3: Git Patch Diff -->
+          <div class="tab-content" id="tab-diff">
+            <div class="diff-panel">
+              <div class="diff-header-box">
+                <div style="font-size: 13px; color: #fff; font-weight: 700;">Proposed Remediation Patch</div>
+                <div style="font-size: 11px; color: var(--green);">3/3 Pytest Verification Green</div>
+              </div>
+              <div class="diff-code-wrapper">
+                <div class="diff-file-title">demo-service/checkout.py</div>
+                <div class="diff-row"><span class="line-num" style="width: 25px;">23</span>&nbsp; net_total = round(subtotal - discount_amount, 2)</div>
+                <div class="diff-row diff-del"><span class="line-num" style="width: 25px;">24</span>- savings_ratio = round(subtotal / net_total, 2)</div>
+                <div class="diff-row diff-add"><span class="line-num" style="width: 25px;">24</span>+ if net_total == 0.0:</div>
+                <div class="diff-row diff-add"><span class="line-num" style="width: 25px;">25</span>+ &nbsp; &nbsp; savings_ratio = 1.0 &nbsp;# 100% discount means full savings</div>
+                <div class="diff-row diff-add"><span class="line-num" style="width: 25px;">26</span>+ else:</div>
+                <div class="diff-row diff-add"><span class="line-num" style="width: 25px;">27</span>+ &nbsp; &nbsp; savings_ratio = round(subtotal / net_total, 2)</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 4: Sentry Trace -->
+          <div class="tab-content" id="tab-sentry">
+            <div class="sentry-panel">
+              <div class="sentry-header-box">
+                <span class="sentry-error-pill">CRITICAL EXCEPTION</span>
+                <div class="sentry-error-title">ZeroDivisionError: float division by zero</div>
+                <div class="sentry-tags">
+                  <span class="sentry-tag-item">service: checkout-service</span>
+                  <span class="sentry-tag-item">env: production</span>
+                  <span class="sentry-tag-item">culprit: calculate_order_total</span>
+                </div>
+              </div>
+
+              <div class="sentry-code-frame">
+                <div class="frame-filename">
+                  <span>demo-service/checkout.py in calculate_order_total</span>
+                  <span>Line 24</span>
+                </div>
+                <div class="code-lines">
+                  <div class="code-line"><span class="line-num">23</span><span>net_total = round(subtotal - discount_amount, 2)</span></div>
+                  <div class="code-line fault-line"><span class="line-num">24</span><span>savings_ratio = round(subtotal / net_total, 2)  # &lt;--- Crash when net_total == 0.0</span></div>
+                  <div class="code-line"><span class="line-num">25</span><span>return {"subtotal": subtotal, "savings_ratio": savings_ratio}</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
       </div>
 
     </div>
 
-  </div>
+    <!-- 5. Bottom Row: Performance Area Chart, Security Donut, and 3D Globe -->
+    <div class="bottom-row">
+      
+      <!-- Box 1: Performance Overview Area Chart -->
+      <div class="bottom-box">
+        <div class="bottom-box-header">
+          <div class="bottom-box-title">
+            <span>📊</span>
+            <span>Performance Overview</span>
+          </div>
+          <div class="time-toggles">
+            <button class="time-btn" data-range="1h">1h</button>
+            <button class="time-btn" data-range="6h">6h</button>
+            <button class="time-btn active" data-range="24h">24h</button>
+            <button class="time-btn" data-range="7d">7d</button>
+          </div>
+        </div>
+        <div style="flex: 1; display: flex; align-items: center;">
+          <canvas id="perf-area-chart" width="420" height="110"></canvas>
+        </div>
+      </div>
+
+      <!-- Box 2: Security & SLA Donut -->
+      <div class="bottom-box">
+        <div class="bottom-box-header">
+          <div class="bottom-box-title">
+            <span>🛡️</span>
+            <span>Security & SLA Overview</span>
+          </div>
+          <span style="font-size: 11px; font-family: var(--font-mono); color: var(--green);">99.98% SLA</span>
+        </div>
+        
+        <div class="donut-gauge-wrapper">
+          <div class="donut-circle-container">
+            <svg class="donut-svg" viewBox="0 0 100 100">
+              <circle class="donut-bg" cx="50" cy="50" r="45"></circle>
+              <circle class="donut-bar" cx="50" cy="50" r="45"></circle>
+            </svg>
+            <div class="donut-center-text">
+              <div class="val">99.98%</div>
+              <div class="lbl">Compliant</div>
+            </div>
+          </div>
+
+          <div class="donut-legend">
+            <div class="legend-item">
+              <span class="legend-name"><span class="legend-dot" style="background: var(--green);"></span>Safe Requests</span>
+              <span class="legend-val">99.98%</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-name"><span class="legend-dot" style="background: var(--cyan);"></span>Blocked Faults</span>
+              <span class="legend-val">0.02%</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-name"><span class="legend-dot" style="background: var(--purple);"></span>Suspicious</span>
+              <span class="legend-val">0.00%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Box 3: 3D Holographic Globe Box -->
+      <div class="bottom-box">
+        <div class="bottom-box-header">
+          <div class="bottom-box-title">
+            <span>🪐</span>
+            <span>Global SRE Mesh</span>
+          </div>
+          <span style="font-size: 11px; color: var(--cyan); font-family: var(--font-mono);">Multi-Region</span>
+        </div>
+
+        <div class="globe-box-content">
+          <div id="globe-canvas-container"></div>
+          <div class="globe-text-details">
+            <h4>Global Protection</h4>
+            <p>Active synthetic probes across us-east-1, eu-west-1, and ap-south-1.</p>
+            <button class="globe-cta-btn" onclick="window.switchTab('activity')">
+              <span>View Mesh Logs</span>
+              <span>→</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
 
   <!-- Executive Postmortem Modal -->
   <div class="modal-overlay" id="postmortem-modal">
@@ -325,12 +475,27 @@
     </div>
   </div>
 
-  <!-- Scripts: Local Vendor Three.js & Modules -->
+  <!-- Scripts -->
   <script src="static/js/vendor/three.min.js"></script>
   <script src="static/js/vendor/OrbitControls.js"></script>
   <script src="static/js/three_cluster.js"></script>
+  <script src="static/js/globe.js"></script>
   <script src="static/js/sparklines.js"></script>
+  <script src="static/js/performance_chart.js"></script>
   <script src="static/js/audio_synth.js"></script>
   <script src="static/js/console_tabs.js"></script>
+
+  <script>
+    // Live Clock Updater
+    function updateLiveClock() {
+      const elem = document.getElementById('live-clock');
+      if (elem) {
+        const now = new Date();
+        elem.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + ' ' + (now.getHours() >= 12 ? 'PM' : 'AM');
+      }
+    }
+    setInterval(updateLiveClock, 1000);
+    updateLiveClock();
+  </script>
 </body>
 </html>
