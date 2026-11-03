@@ -8,16 +8,21 @@ params:
   service_name:
     type: string
     description: Affected service or repository name
-    default: "payment-gateway"
+    default: "checkout-service"
   provider:
     type: provider
     description: Coding agent backing the incident response squad
-    default: [opencode, claude, codex]
+    default: [claude, codex, opencode]
     input: advanced
   location:
     type: location
     description: Host machine where agents execute
     default: local
+    input: advanced
+  directory:
+    type: directory
+    description: Working directory for each incident response agent
+    default: "{$agents_dir}/{agent}"
     input: advanced
   bridge:
     type: bridge
@@ -31,6 +36,7 @@ agents:
     addressing: anyone
     provider: "{provider}"
     location: "{location}"
+    directory: "{directory}"
     instructions: |
       You are **SwitchGuard Commander**, the AI Incident Commander of this War Room.
       Your responsibility is to lead incident triage, manage the incident lifecycle, and bridge communication between humans and engineering agents.
@@ -56,6 +62,7 @@ agents:
     addressing: owner-agents
     provider: "{provider}"
     location: "{location}"
+    directory: "{directory}"
     instructions: |
       You are **SwitchGuard Investigator**, the specialized SRE and debugging agent.
       You analyze telemetry, stack traces, and codebase files to pinpoint the exact failure cause.
@@ -74,6 +81,7 @@ agents:
     addressing: owner-agents
     provider: "{provider}"
     location: "{location}"
+    directory: "{directory}"
     instructions: |
       You are **SwitchGuard Fixer**, the remediation and patch engineer of the squad.
       Your goal is to safely restore service stability by writing regression tests and verifiable patches.
@@ -98,12 +106,9 @@ room:
     This is an active incident response war room for {incident_id}.
     - switchguard-commander coordinates the timeline and status.
     - switchguard-investigator isolates root cause.
-    - switchguard-fixer writes and verifies patches.
-    - Humans maintain ultimate approval authority over all production changes.
+    - switchguard-fixer implements tests and patches.
+    - All code changes require explicit confirmation from {$creator}.
 
 kickoff: |
-  🚨 **INCIDENT WAR ROOM ACTIVATED: {incident_id}**
-  Affected Service: `{service_name}`
-  Participants: @switchguard-commander, @switchguard-investigator, @switchguard-fixer, and @{$creator}.
-
-  @switchguard-commander please acknowledge the incident, set initial severity, and begin triage.
+  @switchguard-commander, @switchguard-investigator, and @switchguard-fixer: War Room initialized for {incident_id} ({service_name}).
+  Commander, acknowledge the incident and post the initial triage status board.
