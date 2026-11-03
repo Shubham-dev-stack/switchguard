@@ -24,8 +24,11 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
+        pip install -e .
         pip install pytest pytest-cov
 
     - name: Run Test Suite with Coverage
+      env:
+        PYTHONPATH: .
       run: |
-        pytest tests/ -v --cov=core --cov=diagnostics --cov=postmortem --cov=scenarios --cov-report=term-missing
+        pytest tests/ -v --cov=core --cov=diagnostics --cov=postmortem --cov=scenarios --cov=governance --cov=ingestion --cov=metrics --cov-report=term-missing
