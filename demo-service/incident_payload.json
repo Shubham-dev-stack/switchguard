@@ -1,0 +1,15 @@
+{
+  "incident_id": "INC-502-CHECKOUT-FAILURE",
+  "service": "payment-gateway",
+  "severity": "P0",
+  "title": "Unhandled ZeroDivisionError in calculate_order_total during promo campaign",
+  "error": "ZeroDivisionError: division by zero",
+  "traceback": [
+    "Traceback (most recent call last):",
+    "  File \"checkout.py\", line 24, in calculate_order_total",
+    "    savings_ratio = round(subtotal / net_total, 2)",
+    "ZeroDivisionError: division by zero"
+  ],
+  "impact": "100% of promotional checkout requests failing with HTTP 500 error",
+  "timestamp": "2026-11-03T01:50:00Z"
+}
