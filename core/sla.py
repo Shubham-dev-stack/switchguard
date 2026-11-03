@@ -1,5 +1,5 @@
 from datetime import datetime, timezone, timedelta
-from typing import Dict, Optional, Tuple
+from typing import Dict, Optional, Tuple, Any
 from .models import Incident, Severity, IncidentStatus
 
 # Standard Enterprise SRE SLA Thresholds (in minutes)
