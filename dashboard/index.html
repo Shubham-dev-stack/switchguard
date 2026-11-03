@@ -7,8 +7,10 @@
   <link rel="stylesheet" href="static/css/cyberdeck.css" />
 </head>
 <body>
-  <!-- 3D Particle Constellation & Perspective Floor Grid -->
-  <canvas id="space-canvas"></canvas>
+  <!-- Ambient Radial Light Mesh -->
+  <div class="ambient-mesh"></div>
+  <canvas id="space-canvas" style="display:none;"></canvas>
+  <canvas id="topology-canvas" style="display:none;"></canvas>
   <div class="scanline-overlay"></div>
 
   <!-- Main CyberDeck Container -->
@@ -17,10 +19,17 @@
     <!-- Top Command Header -->
     <header class="deck-header">
       <div class="brand-section">
-        <div class="brand-logo">🛡️</div>
+        <div class="brand-badge">🛡️</div>
         <div class="brand-titles">
-          <h1>SwitchGuard CyberDeck</h1>
-          <div class="subtitle">Autonomous SRE War Room & Telemetry Engine • Powered by Switch</div>
+          <h1>
+            <span>SwitchGuard CyberDeck</span>
+            <span class="version-tag">v2.4-PROD</span>
+          </h1>
+          <div class="subtitle">
+            <span>Autonomous SRE Swarm & Telemetry Engine</span>
+            <span>•</span>
+            <span style="color: var(--cyan-primary);">Powered by Switch AI</span>
+          </div>
         </div>
       </div>
 
@@ -30,113 +39,246 @@
           <span id="status-pill-text">🟢 ALL SYSTEMS OPERATIONAL</span>
         </div>
 
-        <button class="icon-btn" id="audio-toggle-btn" title="Toggle Sci-Fi SFX Audio">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-          </svg>
+        <button class="audio-btn" id="audio-toggle-btn" onclick="window.toggleAudioMute()" title="Toggle Sci-Fi SFX">
+          <div class="audio-eq-bars">
+            <span></span><span></span><span></span><span></span>
+          </div>
+          <span>AUDIO SFX</span>
         </button>
 
-        <button class="btn-secondary" id="view-postmortem-btn">
+        <button class="btn-secondary" id="view-postmortem-btn" onclick="document.getElementById('postmortem-modal').classList.add('active'); if(window.playAudioTone) window.playAudioTone(600, 'sine', 0.08, 0.05);">
           <span>📑 Postmortem</span>
         </button>
 
-        <button class="btn-primary" id="trigger-chaos-btn">
+        <button class="btn-danger" id="trigger-chaos-btn" onclick="window.runInteractiveSimulation()">
           <span>⚡ Trigger Chaos Outage</span>
         </button>
       </div>
     </header>
 
-    <!-- KPI Telemetry Ribbon -->
+    <!-- KPI Telemetry Ribbon with Live Sparklines -->
     <section class="kpi-grid">
-      <div class="kpi-card">
-        <div class="kpi-label">
-          <span>Mean Time to Acknowledge</span>
-          <span style="color: var(--cyan-primary);">MTTA</span>
+      <div class="kpi-card" style="--card-accent: var(--cyan-primary);">
+        <div class="kpi-header">
+          <span class="kpi-title">Mean Time to Acknowledge</span>
+          <span class="kpi-tag">MTTA</span>
         </div>
         <div class="kpi-value" id="metric-mtta">12s</div>
-        <div class="kpi-detail">Industry Target: &lt; 5m • ~100x Faster</div>
+        <div class="kpi-subtext">Industry Target: &lt; 5m • ~100x Faster</div>
+        <canvas class="sparkline-canvas" id="mtta-sparkline" width="300" height="48"></canvas>
       </div>
 
-      <div class="kpi-card">
-        <div class="kpi-label">
-          <span>Mean Time to Resolution</span>
-          <span style="color: var(--green-emerald);">MTTR</span>
+      <div class="kpi-card" style="--card-accent: var(--green-emerald);">
+        <div class="kpi-header">
+          <span class="kpi-title">Mean Time to Resolution</span>
+          <span class="kpi-tag">MTTR</span>
         </div>
         <div class="kpi-value" id="metric-mttr">2m 51s</div>
-        <div class="kpi-detail">Industry Target: &lt; 30m • ~40x Faster</div>
+        <div class="kpi-subtext">Industry Target: &lt; 30m • ~40x Faster</div>
+        <canvas class="sparkline-canvas" id="mttr-sparkline" width="300" height="48"></canvas>
       </div>
 
-      <div class="kpi-card">
-        <div class="kpi-label">
-          <span>Active Error Rate</span>
-          <span style="color: var(--red-plasma);">TRAFFIC</span>
+      <div class="kpi-card" style="--card-accent: var(--red-plasma);">
+        <div class="kpi-header">
+          <span class="kpi-title">Active Error Rate</span>
+          <span class="kpi-tag">GATEWAY</span>
         </div>
         <div class="kpi-value" id="metric-error-rate" style="color: var(--green-emerald);">0.0%</div>
-        <div class="kpi-detail">Checkout API Gateway Status</div>
+        <div class="kpi-subtext">Checkout API Real-time Health</div>
+        <canvas class="sparkline-canvas" id="error-rate-sparkline" width="300" height="48"></canvas>
       </div>
 
-      <div class="kpi-card">
-        <div class="kpi-label">
-          <span>Financial Blast Radius</span>
-          <span style="color: var(--amber-warning);">RISK</span>
+      <div class="kpi-card" style="--card-accent: var(--amber-warning);">
+        <div class="kpi-header">
+          <span class="kpi-title">Financial Blast Radius</span>
+          <span class="kpi-tag">RISK</span>
         </div>
         <div class="kpi-value" id="metric-financial-risk">$0.00 USD</div>
-        <div class="kpi-detail">Projected Revenue at Risk</div>
+        <div class="kpi-subtext">Projected Revenue Exposure</div>
+        <canvas class="sparkline-canvas" id="financial-risk-sparkline" width="300" height="48"></canvas>
       </div>
     </section>
 
-    <!-- Main Dashboard Grid -->
-    <div class="dashboard-grid">
+    <!-- Main Dashboard Split: 3D Holographic Topology + Multi-Tab SRE Console -->
+    <div class="dashboard-split">
       
-      <!-- Left Column: 3D Topology & System Health -->
+      <!-- Left Column: 3D WebGL Microservice Mesh -->
       <div class="panel-card">
         <div class="panel-header">
           <div class="panel-title">
-            <span>🌐</span>
-            <span>Microservice Topology & Live Data Stream</span>
+            <span>🪐</span>
+            <span>3D Microservice Mesh & Live Data Stream</span>
           </div>
-          <div class="status-pill" style="font-size: 11px;">
-            <span>Postgres LISTEN/NOTIFY Bus</span>
+          <span class="panel-badge">Interactive Three.js WebGL</span>
+        </div>
+
+        <div class="three-cluster-wrapper">
+          <div id="three-cluster-container"></div>
+          <div class="three-hint-hud">
+            <span>🖱️ Drag to rotate 3D cluster • Scroll to zoom</span>
           </div>
         </div>
 
-        <div class="topology-canvas-container">
-          <canvas id="topology-canvas"></canvas>
-        </div>
-
-        <div class="telemetry-row">
-          <div class="telemetry-box">
-            <h4>P99 LATENCY BENCHMARK</h4>
-            <div style="font-size: 20px; font-weight: 700; color: var(--cyan-primary); font-family: var(--font-mono);">
-              18.4 ms <span style="font-size: 12px; color: var(--green-emerald); font-weight: normal;">• OPTIMAL</span>
-            </div>
+        <div class="panel-footer-metrics">
+          <div class="metric-mini-box">
+            <h5>P99 Latency SLA</h5>
+            <div class="val">18.4 ms <span style="font-size: 11px; color: var(--green-emerald); font-weight: normal;">• OPTIMAL</span></div>
           </div>
-          <div class="telemetry-box">
-            <h4>AUTONOMOUS SRE SQUAD</h4>
-            <div style="font-size: 13px; font-family: var(--font-mono); color: var(--text-primary); margin-top: 4px;">
+          <div class="metric-mini-box">
+            <h5>Autonomous SRE Squad</h5>
+            <div class="val" style="font-size: 13px; color: #fff;">
               🛡️ Commander • 🔍 Investigator • 🛠️ Fixer
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Right Column: Live Terminal Stream -->
-      <div class="panel-card" style="padding: 0; background: transparent; border: none;">
-        <div class="terminal-window">
-          <div class="terminal-topbar">
-            <div class="terminal-dots">
-              <span class="dot-red"></span>
-              <span class="dot-yellow"></span>
-              <span class="dot-green"></span>
+      <!-- Right Column: Multi-Tab SRE Command Console -->
+      <div class="console-panel">
+        <div class="console-tabs">
+          <button class="tab-btn active" data-tab="discord">
+            <span>💬</span>
+            <span>Discord War Room</span>
+          </button>
+          <button class="tab-btn" data-tab="sentry">
+            <span>🔍</span>
+            <span>Sentry Trace</span>
+          </button>
+          <button class="tab-btn" data-tab="diff">
+            <span>🛠️</span>
+            <span>Hotfix Diff</span>
+          </button>
+          <button class="tab-btn" data-tab="ledger">
+            <span>⛓️</span>
+            <span>Audit Ledger</span>
+          </button>
+        </div>
+
+        <!-- Tab 1: Discord War Room Stream -->
+        <div class="tab-content active" id="tab-discord">
+          <div class="discord-feed" id="discord-message-stream">
+            <div class="discord-msg-row">
+              <div class="discord-avatar">🛡️</div>
+              <div class="discord-content">
+                <div class="discord-header">
+                  <span class="discord-author">SwitchGuard Commander</span>
+                  <span class="discord-tag">BOT</span>
+                  <span class="discord-timestamp">Today at 18:20</span>
+                </div>
+                <div class="discord-body">
+                  War room connected to cluster telemetry bus. Monitoring 4 services on <code>us-east-1</code>. All synthetic probes healthy. Click <strong>Trigger Chaos Outage</strong> above to simulate production self-healing.
+                </div>
+              </div>
             </div>
-            <div class="terminal-title">switchguard-war-room • bash</div>
-            <div style="font-size: 11px; color: var(--green-emerald); font-family: var(--font-mono);">● CONNECTED</div>
-          </div>
-          <div class="terminal-logs" id="terminal-logs">
-            <!-- Dynamically populated by dashboard.js -->
           </div>
         </div>
+
+        <!-- Tab 2: Sentry Forensic Trace -->
+        <div class="tab-content" id="tab-sentry">
+          <div class="sentry-panel">
+            <div class="sentry-header-box">
+              <span class="sentry-error-pill">CRITICAL EXCEPTION</span>
+              <div class="sentry-error-title">ZeroDivisionError: float division by zero</div>
+              <div class="sentry-tags">
+                <span class="sentry-tag-item">service: checkout-service</span>
+                <span class="sentry-tag-item">env: production</span>
+                <span class="sentry-tag-item">release: v2.4.1</span>
+                <span class="sentry-tag-item">culprit: calculate_order_total</span>
+              </div>
+            </div>
+
+            <div class="sentry-code-frame">
+              <div class="frame-filename">
+                <span>demo-service/checkout.py in calculate_order_total</span>
+                <span>Line 24</span>
+              </div>
+              <div class="code-lines">
+                <div class="code-line">
+                  <span class="line-num">22</span>
+                  <span>discount_amount = round(subtotal * (discount_pct / 100.0), 2)</span>
+                </div>
+                <div class="code-line">
+                  <span class="line-num">23</span>
+                  <span>net_total = round(subtotal - discount_amount, 2)</span>
+                </div>
+                <div class="code-line fault-line">
+                  <span class="line-num">24</span>
+                  <span>savings_ratio = round(subtotal / net_total, 2)  # &lt;--- Crash when net_total == 0.0</span>
+                </div>
+                <div class="code-line">
+                  <span class="line-num">25</span>
+                  <span>return {"subtotal": subtotal, "savings_ratio": savings_ratio}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 3: Synthesized Git Diff -->
+        <div class="tab-content" id="tab-diff">
+          <div class="diff-panel">
+            <div class="diff-header-box">
+              <div style="font-size: 13px; color: #fff; font-weight: 700;">Proposed Remediation Patch</div>
+              <div style="font-size: 11px; color: var(--green-emerald);">3/3 Pytest Verification Green</div>
+            </div>
+            <div class="diff-code-wrapper">
+              <div class="diff-file-title">demo-service/checkout.py</div>
+              <div class="diff-row"><span class="line-num" style="width: 25px;">23</span>&nbsp; net_total = round(subtotal - discount_amount, 2)</div>
+              <div class="diff-row diff-del"><span class="line-num" style="width: 25px;">24</span>- savings_ratio = round(subtotal / net_total, 2)</div>
+              <div class="diff-row diff-add"><span class="line-num" style="width: 25px;">24</span>+ if net_total == 0.0:</div>
+              <div class="diff-row diff-add"><span class="line-num" style="width: 25px;">25</span>+ &nbsp; &nbsp; savings_ratio = 1.0 &nbsp;# 100% discount means full savings</div>
+              <div class="diff-row diff-add"><span class="line-num" style="width: 25px;">26</span>+ else:</div>
+              <div class="diff-row diff-add"><span class="line-num" style="width: 25px;">27</span>+ &nbsp; &nbsp; savings_ratio = round(subtotal / net_total, 2)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 4: Cryptographic Audit Ledger -->
+        <div class="tab-content" id="tab-ledger">
+          <div class="ledger-panel">
+            <div style="margin-bottom: 16px; font-size: 12px; color: var(--text-sub);">
+              SHA-256 Tamper-Proof Incident Block Chain:
+            </div>
+            <div class="ledger-chain">
+              <div class="ledger-block">
+                <div class="block-dot">✔</div>
+                <div class="block-details">
+                  <div class="block-title">Block #0: Genesis Anchor</div>
+                  <div class="block-hash">Hash: 0000000000000000000000000000000000000000000000000000000000000000</div>
+                </div>
+              </div>
+              <div class="ledger-block">
+                <div class="block-dot">✔</div>
+                <div class="block-details">
+                  <div class="block-title">Block #1: ALERT_INGESTED (Sentry ZeroDivisionError)</div>
+                  <div class="block-hash">Hash: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855</div>
+                </div>
+              </div>
+              <div class="ledger-block">
+                <div class="block-dot">✔</div>
+                <div class="block-details">
+                  <div class="block-title">Block #2: PATCH_SYNTHESIZED (checkout.py guard clause)</div>
+                  <div class="block-hash">Hash: 872983ac298f01b3847291a204859cba29485710293847561928347581928374</div>
+                </div>
+              </div>
+              <div class="ledger-block">
+                <div class="block-dot">✔</div>
+                <div class="block-details">
+                  <div class="block-title">Block #3: HUMAN_APPROVAL_GRANTED (Operator @Shubham)</div>
+                  <div class="block-hash">Hash: 9283740192834756192834756192834756192834756192834756192834756192</div>
+                </div>
+              </div>
+              <div class="ledger-block">
+                <div class="block-dot">✔</div>
+                <div class="block-details">
+                  <div class="block-title">Block #4: INCIDENT_RESOLVED (Postmortem Sealed)</div>
+                  <div class="block-hash">Hash: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
 
     </div>
@@ -147,20 +289,20 @@
   <div class="modal-overlay" id="postmortem-modal">
     <div class="modal-content">
       <div class="modal-header">
-        <h3 style="font-size: 18px; font-weight: 700; color: var(--text-primary);">
+        <h3 style="font-size: 16px; font-weight: 700; color: #fff;">
           📑 Postmortem: [P0] INC-502 ZeroDivisionError on 100% Promo Order
         </h3>
-        <button class="icon-btn" id="modal-close-btn">&times;</button>
+        <button class="close-btn" onclick="document.getElementById('postmortem-modal').classList.remove('active')">&times;</button>
       </div>
       <div class="modal-body">
         <p><strong>Incident ID:</strong> <code>INC-502</code> | <strong>Service:</strong> <code>checkout-service</code> (Tier-1)</p>
         <p><strong>Mean Time to Acknowledge (MTTA):</strong> <code>12 seconds</code> | <strong>Mean Time to Resolution (MTTR):</strong> <code>2m 51s</code></p>
-        <br />
-        <h4 style="color: var(--cyan-primary);">1. Executive Summary</h4>
+        
+        <h4>1. Executive Summary</h4>
         <p>During active promotional discount traffic, Tier-1 <code>checkout-service</code> crashed due to an unhandled zero-division calculation on line 24 of <code>checkout.py</code>. SwitchGuard ingested the telemetry alert, opened an incident war room in Discord, pinpointed the root cause, synthesized a guard clause, verified with pytest (3/3 passed), and obtained human signoff from @Shubham in 2m 51s.</p>
-        <br />
-        <h4 style="color: var(--cyan-primary);">2. Verified Autonomous Patch Diff</h4>
-        <pre><code class="diff">--- demo-service/checkout.py
+
+        <h4>2. Verified Autonomous Patch Diff</h4>
+        <pre><code>--- demo-service/checkout.py
 +++ demo-service/checkout.py
 @@ -21,7 +21,10 @@ def calculate_order_total(items, discount_pct=0.0):
      discount_amount = round(subtotal * (discount_pct / 100.0), 2)
@@ -170,8 +312,8 @@
 +        savings_ratio = 1.0  # 100% discount means full savings
 +    else:
 +        savings_ratio = round(subtotal / net_total, 2)</code></pre>
-        <br />
-        <h4 style="color: var(--cyan-primary);">3. 5-Whys Root Cause Analysis</h4>
+
+        <h4>3. 5-Whys Root Cause Analysis</h4>
         <ol style="margin-left: 20px;">
           <li><strong>Why did checkout fail?</strong> Unhandled <code>ZeroDivisionError</code> in <code>calculate_order_total</code>.</li>
           <li><strong>Why was net_total zero?</strong> Customers redeemed a 100% discount promotion.</li>
@@ -183,9 +325,12 @@
     </div>
   </div>
 
-  <!-- Scripts -->
-  <script src="static/js/three_background.js"></script>
-  <script src="static/js/topology.js"></script>
-  <script src="static/js/dashboard.js"></script>
+  <!-- Scripts: Local Vendor Three.js & Modules -->
+  <script src="static/js/vendor/three.min.js"></script>
+  <script src="static/js/vendor/OrbitControls.js"></script>
+  <script src="static/js/three_cluster.js"></script>
+  <script src="static/js/sparklines.js"></script>
+  <script src="static/js/audio_synth.js"></script>
+  <script src="static/js/console_tabs.js"></script>
 </body>
 </html>
