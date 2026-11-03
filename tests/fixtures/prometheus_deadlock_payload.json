@@ -1,0 +1,20 @@
+{
+  "receiver": "switchguard-webhook",
+  "status": "firing",
+  "alerts": [
+    {
+      "status": "firing",
+      "labels": {
+        "alertname": "PostgresTransactionLockExhaustion",
+        "severity": "critical",
+        "service": "billing-api",
+        "instance": "db-primary-us-east-1"
+      },
+      "annotations": {
+        "summary": "Postgres connection pool exhausted; locks blocked on transactions table",
+        "description": "5 concurrent transactions waiting on lock acquisition exceeding 30 seconds"
+      },
+      "startsAt": "2026-11-03T11:46:00Z"
+    }
+  ]
+}
