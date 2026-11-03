@@ -28,7 +28,8 @@ class SeverityClassifier:
         msg_lower = alert.message.lower()
 
         # Check for critical crash signatures in Tier 1 services
-        is_tier_1 = service_lower in TIER_1_SERVICES
+        is_tier_1 = service_lower in TIER_1_SERVICES or any(t in service_lower for t in TIER_1_SERVICES)
+        is_tier_2 = service_lower in TIER_2_SERVICES or any(t in service_lower for t in TIER_2_SERVICES)
         is_fatal_error = any(pattern in error_lower or pattern in msg_lower for pattern in CRITICAL_ERROR_PATTERNS)
 
         if is_tier_1 and (is_fatal_error or error_rate_pct >= 50.0):
@@ -37,7 +38,7 @@ class SeverityClassifier:
         if is_tier_1 or (is_fatal_error and error_rate_pct >= 20.0):
             return Severity.P1_MAJOR
 
-        if error_rate_pct >= 10.0 or service_lower in TIER_2_SERVICES:
+        if error_rate_pct >= 10.0 or is_tier_2:
             return Severity.P2_MODERATE
 
         return Severity.P3_LOW
