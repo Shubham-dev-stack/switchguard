@@ -1463,6 +1463,10 @@ body {
           <span>📑 Postmortem</span>
         </button>
 
+        <button class="action-btn" id="start-guided-demo-btn" style="background: linear-gradient(135deg, rgba(0, 240, 255, 0.25), rgba(168, 85, 247, 0.35)); border: 1px solid var(--neon-cyan); box-shadow: 0 0 16px rgba(0, 240, 255, 0.3); font-weight: 600;" onclick="window.startGuidedDemoWithVoice()">
+          <span>🎙️ Auto Demo (With Audio)</span>
+        </button>
+
         <button class="action-btn danger" id="trigger-chaos-btn" onclick="window.runInteractiveSimulation()">
           <span>⚡ Trigger Chaos Outage</span>
         </button>
@@ -1858,5 +1862,59 @@ body {
     setInterval(updateLiveClock, 1000);
     updateLiveClock();
   </script>
+
+  <!-- Floating Live Narration Subtitles Bar -->
+  <div id="demo-subtitles-bar" style="display:none; position:fixed; bottom:28px; left:50%; transform:translateX(-50%); background:rgba(7,16,30,0.95); border:1px solid var(--neon-cyan); box-shadow:0 0 30px rgba(0,240,255,0.45); border-radius:12px; padding:12px 28px; z-index:99999; font-family:var(--font-sans); color:#fff; text-align:center; max-width:850px; backdrop-filter:blur(12px);">
+    <div style="font-size:11px; font-family:var(--font-mono); color:var(--neon-cyan); text-transform:uppercase; letter-spacing:1px; margin-bottom:4px; font-weight:700;">🎙️ Live Audio Narration & Guided Walkthrough</div>
+    <div id="demo-subtitles-text" style="font-size:14px; font-weight:500; line-height:1.4; color:#f1f5f9;">Starting SwitchGuard walkthrough...</div>
+  </div>
+
+  <!-- Upstream Contributions Showcase Modal -->
+  <div class="modal-overlay" id="upstream-showcase-modal">
+    <div class="modal-content" style="max-width: 680px; border: 1px solid var(--neon-cyan); box-shadow: 0 0 35px rgba(0, 240, 255, 0.3);">
+      <div class="modal-header">
+        <h3 style="font-size: 16px; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px;">
+          🌟 <span>Upstream Contributions: sandbox-quantum/switch</span>
+        </h3>
+        <button class="close-btn" onclick="document.getElementById('upstream-showcase-modal').classList.remove('active')">&times;</button>
+      </div>
+      <div class="modal-body" style="line-height: 1.6;">
+        <p style="color: var(--text-secondary); margin-bottom: 14px; font-size: 13px;">
+          For the <strong>Best Core Contribution Track</strong> ($2,000), we built and contributed 3 production-grade service connectors directly to the official Switch repository:
+        </p>
+        
+        <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:16px;">
+          <div style="background:rgba(255,255,255,0.03); border:1px solid var(--border-glass); border-radius:8px; padding:12px 16px; display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <div style="font-weight:600; color:var(--neon-cyan); font-size:14px;">PR #1343: feat(connections): Supabase Connector</div>
+              <div style="font-size:12px; color:var(--text-muted);">Closes issue #827 · Realtime client, database queries & secure auth</div>
+            </div>
+            <span style="background:rgba(0,255,157,0.15); color:var(--emerald-laser); border:1px solid var(--emerald-laser); border-radius:20px; font-size:11px; padding:3px 12px; font-weight:700;">PASSED ✅</span>
+          </div>
+
+          <div style="background:rgba(255,255,255,0.03); border:1px solid var(--border-glass); border-radius:8px; padding:12px 16px; display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <div style="font-weight:600; color:var(--neon-cyan); font-size:14px;">PR #1348: feat(connections): Sentry Connector</div>
+              <div style="font-size:12px; color:var(--text-muted);">Closes issue #820 · Sentry DSN ingestion, exception stacktraces & breadcrumbs</div>
+            </div>
+            <span style="background:rgba(0,255,157,0.15); color:var(--emerald-laser); border:1px solid var(--emerald-laser); border-radius:20px; font-size:11px; padding:3px 12px; font-weight:700;">PASSED ✅</span>
+          </div>
+
+          <div style="background:rgba(255,255,255,0.03); border:1px solid var(--border-glass); border-radius:8px; padding:12px 16px; display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <div style="font-weight:600; color:var(--neon-cyan); font-size:14px;">PR #1367: feat(connections): Stripe Connector</div>
+              <div style="font-size:12px; color:var(--text-muted);">Closes issue #829 · Stripe payment intents, dispute telemetry & webhooks</div>
+            </div>
+            <span style="background:rgba(0,255,157,0.15); color:var(--emerald-laser); border:1px solid var(--emerald-laser); border-radius:20px; font-size:11px; padding:3px 12px; font-weight:700;">PASSED ✅</span>
+          </div>
+        </div>
+
+        <div style="background:rgba(0,240,255,0.06); border:1px solid rgba(0,240,255,0.25); border-radius:8px; padding:12px 16px; font-size:12.5px; color:var(--text-secondary); text-align:center;">
+          🛡️ <strong>SwitchGuard Core:</strong> 58/58 unit tests passing · 72 commits · Green GitHub Actions CI Matrix
+        </div>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>

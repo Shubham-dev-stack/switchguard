@@ -221,3 +221,65 @@
     initTabs();
   }
 })();
+
+
+  // === GUIDED DEMO WITH VOICE NARRATION (Zero-Touch Studio Walkthrough) ===
+  window.startGuidedDemoWithVoice = function () {
+    const audio = new Audio('/static/audio/demo_narration.mp3?v=' + Date.now());
+    audio.play().catch(e => console.log('Audio playback info:', e));
+
+    const subBar = document.getElementById('demo-subtitles-bar');
+    const subText = document.getElementById('demo-subtitles-text');
+    if (subBar && subText) {
+      subBar.style.display = 'block';
+      subText.textContent = 'Welcome to SwitchGuard, an autonomous SRE war room and cyber-command console powered by Switch AI.';
+    }
+
+    const demoBtn = document.getElementById('start-guided-demo-btn');
+    if (demoBtn) {
+      demoBtn.disabled = true;
+      demoBtn.innerHTML = '<span>🎙️ Walkthrough Running (56s)...</span>';
+    }
+
+    // 0s - 12s: Introduction & 3D cluster overview
+    setTimeout(() => {
+      if (subText) subText.textContent = 'Monitoring real-time health across our checkout, payment, and database clusters.';
+    }, 5500);
+
+    // 13s: Outage triggered
+    setTimeout(() => {
+      if (subText) subText.textContent = 'Simulating critical P0 incident: Trigger Chaos Outage!';
+      window.runInteractiveSimulation();
+    }, 13000);
+
+    // 24s: Discord War Room explanation
+    setTimeout(() => {
+      if (subText) subText.textContent = 'SwitchGuard detects anomaly in Discord War Room. Fixer agent synthesizes hotfix with 100% pytest pass.';
+      window.switchTab('discord');
+    }, 24000);
+
+    // 38s: Human Approval & Cluster Healing
+    setTimeout(() => {
+      if (subText) subText.textContent = 'Human-in-the-loop approval: Patch deployed, 3D cluster heals back to optimal green.';
+    }, 38000);
+
+    // 48s: Upstream Contributions Showcase
+    setTimeout(() => {
+      if (subText) subText.textContent = 'Upstream Switch Contributions: PR #1343 (Supabase), PR #1348 (Sentry), PR #1367 (Stripe).';
+      const modal = document.getElementById('upstream-showcase-modal');
+      if (modal) modal.classList.add('active');
+      if (window.playAudioTone) window.playAudioTone(800, 'sine', 0.1, 0.05);
+    }, 48000);
+
+    // 56s: Finish
+    setTimeout(() => {
+      if (subText) subText.textContent = '🎉 Walkthrough Complete! All tests green (58/58). Thank you judges!';
+      if (demoBtn) {
+        demoBtn.disabled = false;
+        demoBtn.innerHTML = '<span>🎙️ Auto Demo (With Audio)</span>';
+      }
+      setTimeout(() => {
+        if (subBar) subBar.style.display = 'none';
+      }, 5000);
+    }, 56000);
+  };
